@@ -11,7 +11,7 @@ echo "Saving token to /etc/goAgent/config.json"
 sudo mkdir -p /etc/goAgent
 echo "{\"token\": \"$TOKEN\"}" | sudo tee /etc/goAgent/config.json > /dev/null
 
-echo "⬇️ Downloading .deb package"
+echo "Downloading goAgent.deb package"
 curl -fsSL https://github.com/sumit-duskbyte/go-agent-installer/releases/download/v1.0.0/goAgent.deb -o goAgent.deb
 
 echo "Installing package"
