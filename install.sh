@@ -1,20 +1,24 @@
 #!/bin/bash
 
 TOKEN=$1
+SERVER_URL=$2
 
-if [ -z "$TOKEN" ]; then
-  echo "Error: Token missing. Usage: bash -s <YOUR_TOKEN>"
+if [ -z "$TOKEN" ] || [ -z "$SERVER_URL" ]; then
+  echo "❌ Error: Token or Server URL missing."
+  echo "Usage: bash -s <AGENT_KEY> <SERVER_URL>"
   exit 1
 fi
 
-echo "Saving token to /etc/goAgent/config.json"
+echo "Saving token and server URL to /etc/goAgent/config.yml"
 sudo mkdir -p /etc/goAgent
-echo "{\"token\": \"$TOKEN\"}" | sudo tee /etc/goAgent/config.json > /dev/null
 
-echo "Downloading goAgent.deb package"
+# Write YAML config
+echo -e "token: \"$TOKEN\"\nserver_url: \"$SERVER_URL\"" | sudo tee /etc/goAgent/config.yml > /dev/null
+
+echo "⬇️ Downloading goAgent.deb package"
 curl -fsSL https://github.com/sumit-duskbyte/go-agent-installer/releases/download/v1.0.0/goAgent.deb -o goAgent.deb
 
-echo "Installing package"
+echo "Installing go agent package"
 sudo dpkg -i goAgent.deb
 
 echo "Enabling and starting service"
