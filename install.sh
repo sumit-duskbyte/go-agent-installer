@@ -28,6 +28,7 @@ check_ports() {
     echo "Required ports not open: ${missing_ports[*]}"
     echo "Please make sure ports 80 (HTTP), 443 (HTTPS), and 5432 (PostgreSQL) are open before continuing."
     exit 1
+    
   fi
 
   echo
