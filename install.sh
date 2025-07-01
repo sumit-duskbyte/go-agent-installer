@@ -26,7 +26,7 @@ check_ports() {
   done
 
   if [ ${#missing_ports[@]} -gt 0 ]; then
-    echo "❌ Required ports not open: ${missing_ports[*]}"
+    echo "Required ports not open: ${missing_ports[*]}"
     echo "Please make sure ports 80 and 443 are open (listening) before installing."
     exit 1
   fi
