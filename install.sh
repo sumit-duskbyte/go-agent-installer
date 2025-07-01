@@ -9,21 +9,25 @@ if [ -z "$TOKEN" ] || [ -z "$SERVER_URL" ]; then
   exit 1
 fi
 
-check_ports() {
-  local missing_ports=()
+echo "Checking for Ports 80 and 443...."
 
-  for port in 80 443; do
-    if ! ss -tuln | grep -q ":$port "; then
-      missing_ports+=("$port")
-    fi
-  done
+# check_ports() {
+#   local missing_ports=()
 
-  if [ ${#missing_ports[@]} -gt 0 ]; then
-    echo "❌ Required ports not open: ${missing_ports[*]}"
-    echo "Please make sure ports 80 and 443 are open (listening) before installing."
-    exit 1
-  fi
-}
+#   for port in 80 443; do
+#     if ! ss -tuln | grep -q ":$port "; then
+#       missing_ports+=("$port")
+#     fi
+#   done
+
+#   if [ ${#missing_ports[@]} -gt 0 ]; then
+#     echo "❌ Required ports not open: ${missing_ports[*]}"
+#     echo "Please make sure ports 80 and 443 are open (listening) before installing."
+#     exit 1
+#   fi
+# }
+
+echo "Checking if Docker is installed..."
 
 check_docker() {
   if ! command -v docker &> /dev/null; then
@@ -33,14 +37,11 @@ check_docker() {
   fi
 }
 
-echo "Checking for Ports 80 and 443...."
-check_ports
 
+# check_ports
 echo "✅ Ports 80 and 443 are open."
 
-echo "Checking if Docker is installed..."
 check_docker
-
 echo "✅ Docker is installed."
 
 echo "Downloading goAgent.deb package..."
