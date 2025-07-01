@@ -11,14 +11,12 @@ fi
 
 
 check_ports() {
-  echo "Checking for Ports 80 and 443...."
+  echo "Checking for required ports: 80 (HTTP), 443 (HTTPS), and 5432 (PostgreSQL) ..."
   local missing_ports=()
-  local found_ports=()
 
-  for port in 80 443; do
-    if ss -tuln | grep -q ":$port "; then
+  for port in 80 443 5432; do
+    if ss -tuln | awk '{print $5}' | grep -E -q ":$port$|:$port\$"; then
       echo "✅ Port $port is open."
-      found_ports+=("$port")
     else
       echo "❌ Port $port is not open."
       missing_ports+=("$port")
@@ -26,8 +24,9 @@ check_ports() {
   done
 
   if [ ${#missing_ports[@]} -gt 0 ]; then
+    echo
     echo "Required ports not open: ${missing_ports[*]}"
-    echo "Please make sure ports 80 and 443 are open (listening) before installing."
+    echo "Please make sure ports 80 (HTTP), 443 (HTTPS), and 5432 (PostgreSQL) are open before continuing."
     exit 1
   fi
 
@@ -51,10 +50,9 @@ check_docker() {
 
 
 check_ports
-echo "✅ Ports 80 and 443 are open."
 
 check_docker
-echo "✅ Docker is installed."
+
 
 echo "Downloading goAgent.deb package..."
 curl -fsSL https://github.com/sumit-duskbyte/go-agent-installer/releases/download/v1.0.0/goAgent.deb -o goAgent.deb
