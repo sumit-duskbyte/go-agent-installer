@@ -9,9 +9,41 @@ if [ -z "$TOKEN" ] || [ -z "$SERVER_URL" ]; then
   exit 1
 fi
 
+check_ports() {
+  local missing_ports=()
 
+  for port in 80 443; do
+    if ! ss -tuln | grep -q ":$port "; then
+      missing_ports+=("$port")
+    fi
+  done
 
-echo "Downloading goAgent.deb package"
+  if [ ${#missing_ports[@]} -gt 0 ]; then
+    echo "❌ Required ports not open: ${missing_ports[*]}"
+    echo "Please make sure ports 80 and 443 are open (listening) before installing."
+    exit 1
+  fi
+}
+
+check_docker() {
+  if ! command -v docker &> /dev/null; then
+    echo "❌ Docker is not installed."
+    echo "Please install Docker before proceeding."
+    exit 1
+  fi
+}
+
+echo "Checking for Ports 80 and 443...."
+check_ports
+
+echo "✅ Ports 80 and 443 are open."
+
+echo "Checking if Docker is installed..."
+check_docker
+
+echo "✅ Docker is installed."
+
+echo "Downloading goAgent.deb package..."
 curl -fsSL https://github.com/sumit-duskbyte/go-agent-installer/releases/download/v1.0.0/goAgent.deb -o goAgent.deb
 
 echo "Installing go agent package"
