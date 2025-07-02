@@ -1,13 +1,14 @@
 check_apache_ports() {
-  echo "🔍 Checking if Apache2 is serving ports 80 and 443..."
+  echo "Checking if Apache2 is serving ports 80 and 443..."
   local apache_ports=(80 443)
   local apache_port_errors=()
 
   for port in "${apache_ports[@]}"; do
-    if sudo ss -tulnp | awk -v p=":$port" '$1 ~ /LISTEN/ && $5 ~ p {print $5, $7}' | grep -q .; then
+    # Use sudo to ensure we can read process info
+    if sudo ss -tulnp | grep -E -q "LISTEN.+:$port\b"; then
       echo "✅ Port $port is open."
 
-      if ! sudo ss -tulnp | awk -v p=":$port" '$1 ~ /LISTEN/ && $5 ~ p' | grep -q "apache2"; then
+      if ! sudo ss -tulnp | grep -E "LISTEN.+:$port\b" | grep -q "apache2"; then
         echo "❌ Port $port is NOT used by Apache2."
         apache_port_errors+=("$port")
       else
@@ -26,8 +27,9 @@ check_apache_ports() {
     exit 1
   fi
 
-  echo "✅ Apache2 is correctly serving ports 80 and 443."
   echo
+  echo "✅ Apache2 is correctly serving ports 80 and 443."
 }
+
 
 check_apache_ports
