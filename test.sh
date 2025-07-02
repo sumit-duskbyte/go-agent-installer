@@ -31,3 +31,4 @@ check_apache_ports() {
   echo "✅ Apache2 is correctly serving ports 80 and 443."
   echo
 }
+check_apache_ports
