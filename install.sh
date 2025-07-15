@@ -10,7 +10,7 @@ if [ -z "$TOKEN" ] || [ -z "$SERVER_URL" ]; then
 fi
 
 echo "Downloading goAgent_1.0.0_amd64.deb package..."
-curl -fsSL https://github.com/deepakkundra1/dbchefs-public-scripts/releases/download/v1.0.0/goAgent_1.0.0_amd64.deb -o goAgent_1.0.0_amd64.deb
+curl -fsSL https://github.com/sumit-duskbyte/go-agent-installer/releases/download/v1.0.0/goAgent_1.0.0_amd64.deb -o goAgent_1.0.0_amd64.deb
 
 echo "Installing go agent package"
 sudo dpkg -i goAgent_1.0.0_amd64.deb
@@ -30,7 +30,7 @@ log:
 
 paths:
   config_path: "/etc/go-agent/config.yml"
-  
+
 mysql:
   user: "root"
   password: "duskbyte"
